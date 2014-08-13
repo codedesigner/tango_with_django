@@ -2,6 +2,7 @@
 *.db
 *.sqlite
 *.sqlite3
+DATABASE_PATH
 
 #Media
 *.jpg
