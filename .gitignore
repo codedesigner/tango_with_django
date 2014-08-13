@@ -1,0 +1,12 @@
+#python
+*.pyc
+
+#Database
+*.db
+*.sqlite
+*.sqlite3
+
+#Media
+*.jpg
+*.jpeg
+*.png
