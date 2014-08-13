@@ -1,0 +1,9 @@
+Django==1.5.4
+GitPython==0.3.2.RC1
+South==1.0
+argparse==1.2.1
+async==0.6.1
+gitdb==0.5.4
+gitflow==0.5.1
+smmap==0.8.2
+wsgiref==0.1.2
