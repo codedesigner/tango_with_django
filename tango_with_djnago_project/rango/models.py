@@ -6,6 +6,9 @@ class Category(models.Model):
   def __unicode__(self):
     return self.name
 
+  class Meta:
+    verbose_name_plural = "categories"
+
 class Page(models.Model):
   category = models.ForeignKey(Category)
   title = models.CharField(max_length=128)
