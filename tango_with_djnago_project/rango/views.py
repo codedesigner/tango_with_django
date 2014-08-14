@@ -1,6 +1,8 @@
 from django.http import HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+from rango.models import Category, Page
+
 def index(request):
   context = RequestContext(request)
   context_dict = {'boldmessage': "i am bold font from context!!!"}

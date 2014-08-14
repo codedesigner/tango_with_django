@@ -1,7 +1,7 @@
 import os
 
 def populate():
-  python_cat = add_cat('Python')
+  python_cat = add_cat("Python", views=128, likes=64)
 
   add_page(cat=python_cat,
         title="Official Python Tutorial",
@@ -15,7 +15,7 @@ def populate():
         title="Learn Pyhton in 10 minutes",
         url="http://www.korokithakis.net/tutorials/python/")
 
-  django_cat = add_cat("Django")
+  django_cat = add_cat("Django", views=64, likes=32)
 
   add_page(cat=django_cat,
         title="Official Django Tutorial",
@@ -29,7 +29,7 @@ def populate():
         title="How to Tango with Django",
         url="http://www.tangowithdjango.com/")
 
-  frame_cat = add_cat("Other Frameworks")
+  frame_cat = add_cat("Other Frameworks", views=32, likes=16)
 
   add_page(cat=frame_cat,
         title="Bottle",
@@ -45,11 +45,17 @@ def populate():
       print "- {0} - {1}".format(str(c), str(p))
 
 def add_page(cat, title, url, views=0):
-  p = Page.objects.get_or_create(category=cat, title=title, url=url, views=views)[0]
+  p, created = Page.objects.get_or_create(category=cat, title=title, url=url, views=views)
   return p
 
-def add_cat(name):
-  c = Category.objects.get_or_create(name=name)[0]
+def add_cat(name, views=0, likes=0):
+  c, created = Category.objects.get_or_create(name=name)#, views=views, likes=likes)
+  print Category.objects.get_or_create(name=name)
+  print c
+  print created
+  c.views = views
+  c.likes = likes
+  c.save()
   return c
 
 # Starts execution here!
