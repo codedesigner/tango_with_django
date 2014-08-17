@@ -16,6 +16,12 @@
     {% else %}
       <strong>There are no categories present.</strong>
     {% endif %}
+    <h3>The most viewed pages are :</h3>
+    <ul>
+      {% for page in pages %}
+        <li><a href="{{ page.url }}">{{ page.title }}</a></li>
+      {% endfor %}
+    </ul>
     <a href="{% url 'about' %}">About</a> 
     <!--<img src="{% static "rango.jpg" %}" alt="Picture of Rango" /> image -->
   </body>
