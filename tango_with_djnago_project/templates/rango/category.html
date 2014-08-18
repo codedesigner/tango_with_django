@@ -1,7 +1,9 @@
 <!DOCTYPE html>
+{% load static %}
 <html>
     <head>
         <title>Rango</title>
+        <link rel="stylesheet" type="text/css" src="{% static "bootstrap/css/bootstrap.css" %}">
     </head>
 
     <body>
@@ -15,6 +17,8 @@
             </ul>
             {% else %}
                 <strong>No pages currently in category.</strong>
+                <a href="{% url 'add_page' %}" class="btn btn-info btn-xs">Add Page</a>
+
             {% endif %}
         {% else %}
             The specified category {{ category_name }} does not exist!
