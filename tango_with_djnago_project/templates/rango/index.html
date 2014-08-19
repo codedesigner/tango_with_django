@@ -10,7 +10,9 @@
     {% if categories %}
     <ul>
       {% for category in categories %}
-      <li><a href="/rango/category/{{ category.url }}">{{ category.name }}</a></li>
+      {% autoescape on %}
+      <li><a href="/rango/category/{{ category.url|urlencode }}">{{ category.name }}</a></li>
+      {% endautoescape %}
       {% endfor %}
     </ul>
     {% else %}
@@ -23,7 +25,7 @@
       {% endfor %}
     </ul> -->
     <a href="{% url 'about' %}">About</a> 
-    <a href="/rango/add_category/">Add a New Category</a>
+    <a href="/rango/add_category/">Add Category</a>
     <!--<img src="{% static "rango.jpg" %}" alt="Picture of Rango" /> image -->
   </body>
 <html>
