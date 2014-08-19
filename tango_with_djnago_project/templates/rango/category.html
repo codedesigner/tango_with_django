@@ -16,8 +16,9 @@
                 {% endfor %}
             </ul>
             {% else %}
-                <strong>No pages currently in category.</strong>
-                <a href="{% url 'add_page' %}" class="btn btn-info btn-xs">Add Page</a>
+                <h3>No pages currently in category.</h3>
+                <p><strong>Would you like to add page?</strong></p>
+                <p><a href="category_name_url/add_page" class="btn btn-info btn-xs">Add Page</a></p>
 
             {% endif %}
         {% else %}

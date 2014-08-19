@@ -47,6 +47,15 @@ def populate():
         url="http://flask.pocoo.org",
         views=50)
 
+  fortran_cat = add_cat("Fortran", views=0, likes=0)
+
+  add_page(cat=fortran_cat,
+        title="Fortran",
+        url="http://www.fortran.com/the-fortran-company-homepage/fortran-tutorials/",
+        views=0)
+
+  c_plus_plus_cat = add_cat("C++", views=0, likes=0)
+
   # Print out what we have added to user.
   for c in Category.objects.all():
     for p in Page.objects.filter(category=c):
