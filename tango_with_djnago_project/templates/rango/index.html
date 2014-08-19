@@ -5,7 +5,11 @@
     <title>Rango</title>
   </head>
   <body>
+    {% if user.is_authenticated %}
+    <h1>Rango says...hello {{ user.username }}!</h1>
+    {% else %}
     <h1>Rango says....hello world!</h1>
+    {% endif %}
 
     {% if categories %}
     <ul>
@@ -25,8 +29,9 @@
       {% endfor %}
     </ul> -->
     <a href="{% url 'about' %}">About</a> 
-    <a href="/rango/add_category/">Add Category</a>
-    <a href="/rango/register/">Register Here</a>
+    <p><a href="/rango/add_category/">Add a New Category</a></p>
+    <p><a href="/rango/register/">Register Here</a></p>
+    <p><a href="/rango/login">Login</a></p>
     <!--<img src="{% static "rango.jpg" %}" alt="Picture of Rango" /> image -->
   </body>
 <html>
