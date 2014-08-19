@@ -63,7 +63,7 @@ def add_page(request, category_name_url):
 
 def index(request):
   context = RequestContext(request)
-  category_list = Category.objects.order_by('-likes')[:5]  
+  category_list = Category.objects.order_by('-likes') 
   page_list = Page.objects.order_by('-views')[:5]
   context_dict = {'categories':category_list, 'pages':page_list}
   for category in category_list:

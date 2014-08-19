@@ -7,7 +7,7 @@
     </head>
 
     <body>
-        <h1>{{ category_name }}</h1>
+        <h1>{{ category }}</h1>
         {% if category %}
             {% if pages %}
             <ul>
@@ -18,7 +18,7 @@
             {% else %}
                 <h3>No pages currently in category.</h3>
                 <p><strong>Would you like to add page?</strong></p>
-                <p><a href="category_name_url/add_page" class="btn btn-info btn-xs">Add Page</a></p>
+                <p><a href="{{ category }}/add_page" class="btn btn-info btn-xs">Add Page</a></p>
 
             {% endif %}
         {% else %}
