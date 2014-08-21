@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>About</title>
-  </head>
-  <body>
-    <h1>You are at Rango's about page !!!</h1>
-    <a href="{% url 'index' %}">Home</a>
-  </body>
-</html>
+{% extends 'rango/base.html' %}
+  {% block body_block %}
+  {% if user.is_authenticated %}
+    <h1>Hallo {{ user.username }}...You are at Rango's about page !!!</h1>
+  {% else %}
+    <h1>Hallo Guest, You are at Rango's about page !!!</h1>
+  {% endif %}
+  {% endblock %}

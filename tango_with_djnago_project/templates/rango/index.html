@@ -1,10 +1,5 @@
-<!DOCTYPE html>
-<!--{% load static %} to load images -->
-<html>
-  <head>
-    <title>Rango</title>
-  </head>
-  <body>
+{% extends 'rango/base.html' %}
+  {% block body_block %}
     {% if user.is_authenticated %}
     <h1>Rango says...hello {{ user.username }}!</h1>
     {% else %}
@@ -22,21 +17,10 @@
     {% else %}
       <strong>There are no categories present.</strong>
     {% endif %}
+  {% endblock %}
     <!--<h3>The most viewed pages are :</h3>
     <ul>
       {% for page in pages %}
         <li><a href="{{ page.url }}">{{ page.title }}</a></li>t
       {% endfor %}
     </ul> -->
-    <a href="{% url 'about' %}">About</a>    
-    {% if user.is_authenticated %}
-    <p><a href="/rango/add_category/">Add a New Category</a></p>
-    <p><a href="/rango/restricted/">Restricted</a></p>
-    <p><a href="/rango/logout">Logout</a></p>
-    {% else %}
-    <p><a href="/rango/register/">Register</a></p>
-    <p><a href="/rango/login/">Login</a></p>
-    {% endif %}
-    <!--<img src="{% static "rango.jpg" %}" alt="Picture of Rango" /> image -->
-  </body>
-<html>

@@ -6,6 +6,7 @@ from rango.models import Category, Page
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 from django.contrib.auth.decorators import login_required
 
+@login_required
 def add_category(request):
     # Get the context from the request.
     context = RequestContext(request)
@@ -33,6 +34,7 @@ def add_category(request):
     # Render the form with error messages (if any).
     return render_to_response('rango/add_category.html', {'form': form}, context)
 
+@login_required
 def add_page(request, category_name_url):
     context = RequestContext(request)
 
@@ -64,6 +66,8 @@ def add_page(request, category_name_url):
 
 
 def index(request):
+  # Create a cookie  
+  request.session.set_test_cookie()  
   context = RequestContext(request)
   category_list = Category.objects.order_by('-likes')  
   page_list = Page.objects.order_by('-views')[:5]
@@ -77,7 +81,8 @@ def index(request):
   return render_to_response('rango/index.html', context_dict, context)
 
 def about(request):
-  return render(request, 'rango/about.html')
+    context = RequestContext(request)
+    return render_to_response('rango/about.html', {}, context)
 
 def category(request, category_name_url):
   context = RequestContext(request)
@@ -99,6 +104,9 @@ def decode_url(category_name_url):
    return category_name
 
 def register(request):
+    if request.session.test_cookie_worked():
+        print ">>> TEST COOKIE WORKED !"
+        request.session.delete_test_cookie()
     # Like before, get the request's context.
     context = RequestContext(request)
 
@@ -190,7 +198,7 @@ def user_login(request):
         else:
             # Bad login details were provided. So we can't log the user in.
             print "Invalid login details: {0}, {1}".format(username, password)
-            return HttpResponse("Invalid login details supplied.")
+            return HttpResponseRedirect('', "Invalid login details supplied.")
 
     # The request is not a HTTP POST, so display the login form.
     # This scenario would most likely be a HTTP GET.
@@ -201,8 +209,8 @@ def user_login(request):
 
 @login_required
 def restricted(request):
-    context = RequestContext(request)
-    return render_to_response('/rango/restricted.html/')
+    #context = RequestContext(request)
+    return render(request, 'rango/restricted.html')
 
 @login_required
 def user_logout(request):
