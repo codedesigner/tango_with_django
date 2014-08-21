@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response, render
@@ -68,40 +69,70 @@ def add_page(request, category_name_url):
 def index(request):
   # Create a cookie  
   # request.session.set_test_cookie()  
-  context = RequestContext(request)
-  category_list = Category.objects.order_by('-likes')  
-  page_list = Page.objects.order_by('-views')[:5]
-  context_dict = {
-    'categories':category_list,
-    'pages':page_list,
-    'user': request.user}
-  print request.user
-  for category in category_list:
-    category.url = category.name.replace(' ', '_')
-  return render_to_response('rango/index.html', context_dict, context)
+    context = RequestContext(request)
+    category_list = Category.objects.all()    
+    context_dict = {'categories':category_list}
+  # print request.user
+    for category in category_list:
+        category.url = encode_url(category.name)
+
+    page_list = Page.objects.order_by('-views')[:5]
+    context_dict['pages'] = page_list
+
+    # ### NEW CODE ###
+    # Obtaine our Response object early so we can add cookie information.
+    response = render_to_response('rango/index.html', context_dict, context)
+    
+    # Get the number of visits to the site.
+    # We use the COOKIE.get() function to obtaine the visits cookie.
+    # If the cookie exists, the value returned is casted to an integer.
+    # If the cookie doesn't exists, we default to zero and cast that.
+    visits = int(request.COOKIES.get('visits', '0'))
+
+    # Does the cookie last_visit exist?
+    if 'last_visit' in request.COOKIES:
+        # Yes it does! Get the cookie's value.
+        last_visit = request.COOKIES['last_visit']
+        # Cast the value to a python date/time object.
+        last_visit_time = datetime.striptime(last_visit[:-7], "%Y-%m-%d %H:%M:%S")
+
+        # If it's been more than a day since the last visit...
+        if (datetime.now() - last_visit_time).days > 0:
+            # ...reassign the value of the cookie to +1 of what it was before..
+            response.set_cookie('visits', visits+1)
+            # ...and update the last visit cookie , too.
+            response.set_cookie('last_visit', datetime.now())
+    else:
+            # Cookie last_visit doesn't exist, so createit to the current date/time.
+            response.set_cookie('last_visit', datetime.now())
+    return response
 
 def about(request):
     context = RequestContext(request)
     return render_to_response('rango/about.html', {}, context)
 
 def category(request, category_name_url):
-  context = RequestContext(request)
-  category_name = category_name_url.replace('_', ' ')
-  context_dict = {'category_name' : category_name}
-  try:
-    category = Category.objects.get(name=category_name)
-    pages = Page.objects.filter(category=category)
-    context_dict['pages'] = pages
-    context_dict['category'] = category
-  except Category.DoesNotExist:
-    pass
+    context = RequestContext(request)
+    category_name = category_name_url.replace('_', ' ')
+    context_dict = {'category_name' : category_name}
+    try:
+        category = Category.objects.get(name=category_name)
+        pages = Page.objects.filter(category=category)
+        context_dict['pages'] = pages
+        context_dict['category'] = category
+    except Category.DoesNotExist:
+        pass
 
-  return render_to_response('rango/category.html', context_dict, context)
+    return render_to_response('rango/category.html', context_dict, context)
 
 # Function to replace '_' with spaces in url's
 def decode_url(category_name_url):
    category_name = category_name_url.replace('_', ' ')
    return category_name
+
+def encode_url(category_name_url):
+    category_name = category_name_url.replace(' ', '_')
+    return category_name
 
 def register(request):
     # if request.session.test_cookie_worked():
