@@ -67,7 +67,7 @@ def add_page(request, category_name_url):
 
 def index(request):
   # Create a cookie  
-  request.session.set_test_cookie()  
+  # request.session.set_test_cookie()  
   context = RequestContext(request)
   category_list = Category.objects.order_by('-likes')  
   page_list = Page.objects.order_by('-views')[:5]
@@ -104,9 +104,9 @@ def decode_url(category_name_url):
    return category_name
 
 def register(request):
-    if request.session.test_cookie_worked():
-        print ">>> TEST COOKIE WORKED !"
-        request.session.delete_test_cookie()
+    # if request.session.test_cookie_worked():
+    #     print ">>> TEST COOKIE WORKED !"
+    #     request.session.delete_test_cookie()
     # Like before, get the request's context.
     context = RequestContext(request)
 
