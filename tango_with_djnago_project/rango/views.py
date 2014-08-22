@@ -94,7 +94,7 @@ def index(request):
         # Yes it does! Get the cookie's value.
         last_visit = request.COOKIES['last_visit']
         # Cast the value to a python date/time object.
-        last_visit_time = datetime.striptime(last_visit[:-7], "%Y-%m-%d %H:%M:%S")
+        last_visit_time = datetime.strptime(last_visit[:-7], "%Y-%m-%d %H:%M:%S")
 
         # If it's been more than a day since the last visit...
         if (datetime.now() - last_visit_time).days > 0:

@@ -1,23 +1,25 @@
 {% extends 'rango/base.html' %}
   {% block body_block %}
-    {% if user.is_authenticated %}
-    <h1>Rango says...hello {{ user.username }}!</h1>
-    {% else %}
-    <h1>Rango says....hello world!</h1>
-    {% endif %}
+    <div class="her-unit">
+      {% if user.is_authenticated %}
+        <h1>Rango says...hello {{ user.username }}!</h1>
+      {% else %}
+        <h1>Rango says....hello world!</h1>
+      {% endif %}
 
-    {% if categories %}
-    <ul>
-      {% for category in categories %}
-      {% autoescape on %}
-      <li><a href="/rango/category/{{ category.url }}">{{ category.name }}</a></li>
-      {% endautoescape %}
-      {% endfor %}
-    </ul>
-    {% else %}
-      <strong>There are no categories present.</strong>
-    {% endif %}
-  {% endblock %}
+      {% if categories %}
+        <ul>
+          {% for category in categories %}
+          {% autoescape on %}
+          <li><a href="/rango/category/{{ category.url }}">{{ category.name }}</a></li>
+          {% endautoescape %}
+          {% endfor %}
+        </ul>
+      {% else %}
+          <strong>There are no categories present.</strong>
+      {% endif %}
+    </div>
+  {% endblock %}    
     <!--<h3>The most viewed pages are :</h3>
     <ul>
       {% for page in pages %}

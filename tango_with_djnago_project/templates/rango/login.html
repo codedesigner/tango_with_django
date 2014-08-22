@@ -1,16 +1,14 @@
 {% extends "rango/base.html" %}
-
   {% block body_block %}
-    <h1>Login to Rango</h1>
-
-    <form id="login_form" method="post" action="/rango/login/">
-      {% csrf_token %}
-      Username : <input type="text" name="username" value="" id="username" size="50" />
-      <br />
-      Password : <input type="password" name="password" value="" size="50" />
-      <br />
-
-      <input type="submit" value="submit" />
-    </form>
-    <a href="{% url 'index' %}">Home</a>
+    <div class="hero-unit">
+      <h3>Login to Rango</h3>
+      <form id="login_form" method="post" action="/rango/login/">
+        {% csrf_token %}
+        Username : <input type="text" name="username" value="" id="username" size="50" />
+        <br />
+        Password : <input type="password" name="password" value="" size="50" />
+        <br />
+        <input type="submit" value="submit" />
+      </form>      
+    </div>
   {% endblock %}
