@@ -70,7 +70,7 @@ def index(request):
   # Create a cookie  
   # request.session.set_test_cookie()  
     context = RequestContext(request)
-    category_list = Category.objects.all()    
+    category_list = Category.objects.order_by('-likes')[:5]
     context_dict = {'categories':category_list}
   # print request.user
     for category in category_list:
@@ -84,7 +84,7 @@ def index(request):
     response = render_to_response('rango/index.html', context_dict, context)
     
     # Get the number of visits to the site.
-    # We use the COOKIE.get() function to obtaine the visits cookie.
+    # We use the COOKIES.get() function to obtaine the visits cookie.
     # If the cookie exists, the value returned is casted to an integer.
     # If the cookie doesn't exists, we default to zero and cast that.
     visits = int(request.COOKIES.get('visits', '0'))
@@ -108,8 +108,9 @@ def index(request):
     return response
 
 def about(request):
-    context = RequestContext(request)
-    return render_to_response('rango/about.html', {}, context)
+    visit_count = int(request.COOKIES.get('visits', 0))
+    context = RequestContext(request)    
+    return render_to_response('rango/about.html', {'visit_count':visit_count}, context)
 
 def category(request, category_name_url):
     context = RequestContext(request)
