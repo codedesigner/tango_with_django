@@ -226,11 +226,12 @@ def user_login(request):
                 return HttpResponseRedirect('/rango/')
             else:
                 # An inactive account was used - no logging in!
-                return HttpResponse("Your Rango account is disabled.")
+                return render_to_response('rango/login.html', {'disabled_user':True}, context)
         else:
             # Bad login details were provided. So we can't log the user in.
             print "Invalid login details: {0}, {1}".format(username, password)
-            return HttpResponseRedirect('', "Invalid login details supplied.")
+            # return HttpResponseRedirect('', "Invalid login details supplied.")
+            return render_to_response('rango/login.html', {'bad_details':True}, context)
 
     # The request is not a HTTP POST, so display the login form.
     # This scenario would most likely be a HTTP GET.
