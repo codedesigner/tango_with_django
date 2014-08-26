@@ -112,6 +112,20 @@ def about(request):
     context = RequestContext(request)    
     return render_to_response('rango/about.html', {'visit_count':visit_count}, context)
 
+def category_list(request):
+    context = RequestContext(request)
+    category_list = Category.objects.order_by('-likes')
+    context_dict = {'categories':category_list}
+    for category in category_list:
+        category.url = encode_url(category.name)
+    return render_to_response('rango/category_list.html', context_dict, context)
+
+def page_list(request):
+    context = RequestContext(request)
+    page_list = Page.objects.all()
+    context_dict = {'pages':page_list}
+    return render_to_response('rango/page_list.html', context_dict, context)
+
 def category(request, category_name_url):
     context = RequestContext(request)
     category_name = category_name_url.replace('_', ' ')
