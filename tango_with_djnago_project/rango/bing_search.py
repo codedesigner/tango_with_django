@@ -1,9 +1,9 @@
 import json
 import urllib, urllib2
 
-def run_query(search_term):
+def run_query(search_terms):
     # Specify the base
-    root_url = 'https://api.datamarket.azure.com/Bing/Search'
+    root_url = 'https://api.datamarket.azure.com/Bing/Search/'
     source = 'Web'
 
     # Specify how many results we wish to be returned per page.
@@ -12,9 +12,10 @@ def run_query(search_term):
     results_per_page = 10
     offset = 0
 
-    # Wrap quotes around our query term as required by the Bing API.
+    # Wrap quotes around our query terms as required by the Bing API.
     # The query we will then use is stored within variable query.
-    query = "'{0}'".format(serach_term)
+    query = "'{0}'".format(search_terms)
+    print query
     query = urllib.quote(query)
 
     # Construct the latter part of our request's URL.
@@ -45,12 +46,12 @@ def run_query(search_term):
         urllib2.install_opener(opener)
 
         # Connect to the server and read the response generated.
-        response = urllib2.urlopen(serach_url).read()
+        response = urllib2.urlopen(search_url).read()
 
-        #Convert the string response to a Python dictionary object.
+        # Convert the string response to a Python dictionary object.
         json_response = json.loads(response)
 
-        # Loop through each page returned populating out results list.
+        # Loop through each page returned, populating out results list.
         for result in json_response['d']['results']:
             results.append({
                 'title': result['Title'],
@@ -63,3 +64,6 @@ def run_query(search_term):
 
     # Return the list of results to the calling function.
     return results
+
+# def main(query):
+
