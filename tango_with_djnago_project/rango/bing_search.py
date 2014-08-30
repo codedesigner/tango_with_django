@@ -15,7 +15,6 @@ def run_query(search_terms):
     # Wrap quotes around our query terms as required by the Bing API.
     # The query we will then use is stored within variable query.
     query = "'{0}'".format(search_terms)
-    print query
     query = urllib.quote(query)
 
     # Construct the latter part of our request's URL.
@@ -65,5 +64,12 @@ def run_query(search_terms):
     # Return the list of results to the calling function.
     return results
 
-# def main(query):
+if __name__ =='__main__':
+    query = input("Enter a query to search with quotes?\n")
 
+    result = run_query(query)
+
+    for result in result:
+        print result
+        print "------------------------------------------------------------------------------"
+        print "------------------------------------------------------------------------------"
