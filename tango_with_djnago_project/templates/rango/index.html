@@ -13,7 +13,7 @@
               <li><a href="/rango/category/{{ category.url }}">{{ category.name }}</a></li>
             {% endfor %}
           </ul>
-          <a href="/rango/category_list/" class="btn btn-info btn-xs">Categories&raquo;</a>
+          <a href="/rango/category_list/" class="btn btn-info btn-xs">All Categories&raquo;</a>
         {% else %}
           <strong>There are no categories present.</strong>
         {% endif %}
@@ -27,7 +27,7 @@
               <li><a href="{{ page.url }}">{{ page.title }}</a> - {{ page.category }} (views: {{ page.views }})</li>
             {% endfor %}
           </ul>
-          <a href="/rango/page_list" class="btn btn-info btn-xs">Pages&raquo;</a>
+          <a href="/rango/page_list" class="btn btn-info btn-xs">All Pages&raquo;</a>
         {% else %}
           <strong>No pages at present.</strong>
         {% endif %}

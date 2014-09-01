@@ -113,13 +113,13 @@ def about(request):
     context = RequestContext(request)    
     return render_to_response('rango/about.html', {'visit_count':visit_count}, context)
 
-def category_list(request):
-    context = RequestContext(request)
-    category_list = Category.objects.order_by('-likes')
-    context_dict = {'categories':category_list}
-    for category in category_list:
+def get_category_list():
+    #context = RequestContext(request)
+    category_l = Category.objects.order_by('-likes')
+    context_dict_l = {'categories_l':category_l}
+    for category in category_l:
         category.url = encode_url(category.name)
-    return render_to_response('rango/category_list.html', context_dict, context)
+    return render_to_response('rango/category_list.html', context_dict_l)
 
 def page_list(request):
     context = RequestContext(request)
