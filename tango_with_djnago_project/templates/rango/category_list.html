@@ -1,7 +1,8 @@
+{% extends 'rango/base.html' %}
   {% block body_block %}
     <div class="hero-unit">
       <h3>List of All Available Categories</h3>
-      {% for category in category_l %}
+      {% for category in categories %}
         <ul>
           <li><a href="/rango/category/{{ category.url }}">{{ category.name }}</a></li>
         </ul>

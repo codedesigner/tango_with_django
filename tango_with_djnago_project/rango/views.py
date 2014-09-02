@@ -6,7 +6,6 @@ from django.contrib.auth import authenticate, login, logout
 from rango.models import Category, Page
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 from django.contrib.auth.decorators import login_required
-from rango.bing_search import run_query
 
 @login_required
 def add_category(request):
@@ -113,13 +112,13 @@ def about(request):
     context = RequestContext(request)    
     return render_to_response('rango/about.html', {'visit_count':visit_count}, context)
 
-def get_category_list():
-    #context = RequestContext(request)
-    category_l = Category.objects.order_by('-likes')
-    context_dict_l = {'categories_l':category_l}
-    for category in category_l:
+def category_list(request):
+    context = RequestContext(request)
+    category_list = Category.objects.order_by('-likes')
+    context_dict = {'categories':category_list}
+    for category in category_list:
         category.url = encode_url(category.name)
-    return render_to_response('rango/category_list.html', context_dict_l)
+    return render_to_response('rango/category_list.html', context_dict, context)
 
 def page_list(request):
     context = RequestContext(request)
@@ -267,16 +266,3 @@ def user_logout(request):
 
     # Take back the user to the homepage.
     return HttpResponseRedirect('/rango/')
-
-def search(request):
-    context = RequestContext(request)
-    result_list = []
-
-    if request.method == 'POST':
-        query = request.POST['query'].strip()
-
-        if query:
-            # Run Bing function to the results list!
-            result_list = run_query(query)
-
-    return render_to_response('rango/search.html', {'result_list': result_list}, context)
