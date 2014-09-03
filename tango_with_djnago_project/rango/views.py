@@ -12,6 +12,7 @@ from rango.bing_search import run_query
 def add_category(request):
     # Get the context from the request.
     context = RequestContext(request)
+    category_list = get_category_list()
 
     # A HTTP POST?
     if request.method == 'POST':
@@ -34,11 +35,12 @@ def add_category(request):
 
     # Bad form (or form details), no form supplied...
     # Render the form with error messages (if any).
-    return render_to_response('rango/add_category.html', {'form': form}, context)
+    return render_to_response('rango/add_category.html', {'form': form, 'category_list':category_list}, context)
 
 @login_required
 def add_page(request, category_name_url):
     context = RequestContext(request)
+    category_list = get_category_list()
 
     category_name = decode_url(category_name_url)
     if request.method == 'POST':
@@ -51,11 +53,11 @@ def add_page(request, category_name_url):
                 cat = Category.objects.get(name=category_name)
                 page.category = cat
             except Category.DoesNotExist:
-                return render_to_response('rango/add_category.html', {}, context)
+                return render_to_response('rango/add_category.html', {'category_list':category_list}, context)
 
             page.views = 0
             page.save()
-            return category(request, category_name_url)
+            return category(request, category_name_url, {'category_list':category_list})
         else:
             print form.errors
     else:
@@ -63,7 +65,8 @@ def add_page(request, category_name_url):
 
     return render_to_response('rango/add_page.html',
             {'category_name_url':category_name_url,
-            'category_name':category_name, 'form':form},
+            'category_name':category_name, 'form':form,
+            'category_list':category_list},
             context)
 
 
@@ -113,16 +116,17 @@ def index(request):
 
 def about(request):
     visit_count = int(request.COOKIES.get('visits', 0))
-    context = RequestContext(request)    
-    return render_to_response('rango/about.html', {'visit_count':visit_count}, context)
-
-def category_list(request):
     context = RequestContext(request)
-    category_list = Category.objects.order_by('-likes')
-    context_dict = {'categories':category_list}
-    for category in category_list:
-        category.url = encode_url(category.name)
-    return render_to_response('rango/category_list.html', context_dict, context)
+    category_list = get_category_list()  
+    return render_to_response('rango/about.html', {'visit_count':visit_count, 'category_list':category_list}, context)
+
+# def category_list(request):
+#     context = RequestContext(request)
+#     category_list = Category.objects.order_by('-likes')
+#     context_dict = {'categories':category_list}
+#     for category in category_list:
+#         category.url = encode_url(category.name)
+#     return render_to_response('rango/category_list.html', context_dict, context)
 
 
 def get_category_list():
@@ -139,7 +143,7 @@ def page_list(request):
 
 def category(request, category_name_url):
     context = RequestContext(request)
-    category_name = category_name_url.replace('_', ' ')
+    category_name = decode_url(category_name_url)
     context_dict = {'category_name' : category_name}
     try:
         category = Category.objects.get(name=category_name)
@@ -168,6 +172,7 @@ def register(request):
     #     request.session.delete_test_cookie()
     # Like before, get the request's context.
     context = RequestContext(request)
+    category_list = get_category_list()
 
     # A boolean value for telling the template whether the registration was successful.
     # Set to False initially. Code changes value to True when registration succeeds.
@@ -222,12 +227,13 @@ def register(request):
     # Render the template depending on the context.
     return render_to_response(
             'rango/register.html',
-            {'user_form': user_form, 'profile_form': profile_form, 'registered': registered},
+            {'user_form': user_form, 'profile_form': profile_form, 'registered': registered, 'category_list':category_list},
             context)
 
 def user_login(request):
     #Like before, obtaine the context for the user's request.
     context = RequestContext(request)
+    category_list = get_category_list()
 
     # If the request is a HTTP POST, try to pull out the  relevat information.
     if request.method == 'POST':
@@ -253,24 +259,25 @@ def user_login(request):
                 return HttpResponseRedirect('/rango/')
             else:
                 # An inactive account was used - no logging in!
-                return render_to_response('rango/login.html', {'disabled_user':True}, context)
+                return render_to_response('rango/login.html', {'disabled_user':True, 'category_list':category_list}, context)
         else:
             # Bad login details were provided. So we can't log the user in.
             print "Invalid login details: {0}, {1}".format(username, password)
             # return HttpResponseRedirect('', "Invalid login details supplied.")
-            return render_to_response('rango/login.html', {'bad_details':True}, context)
+            return render_to_response('rango/login.html', {'bad_details':True, 'category_list':category_list}, context)
 
     # The request is not a HTTP POST, so display the login form.
     # This scenario would most likely be a HTTP GET.
     else:
         # No context variables to pass to the template system, hence the
         # blank dictionary object...
-        return render_to_response('rango/login.html', {}, context)
+        return render_to_response('rango/login.html', {'category_list':category_list}, context)
 
 @login_required
 def restricted(request):
+    category_list = get_category_list()
     #context = RequestContext(request)
-    return render(request, 'rango/restricted.html')
+    return render(request, 'rango/restricted.html', {'category_list':category_list})
 
 @login_required
 def user_logout(request):
@@ -284,6 +291,7 @@ def user_logout(request):
 def search(request):
     context = RequestContext(request)
     result_list = []
+    category_list = get_category_list()
 
     if request.method == 'POST':
         query = request.POST['query'].strip()
@@ -292,6 +300,7 @@ def search(request):
             # Run our Bing function to get the results list!
             result_list = run_query(query)
 
-    return render_to_response('rango/search.html', {'result_list': result_list}, context)
+    return render_to_response('rango/search.html', {'result_list': result_list,
+                                                    'category_list':category_list}, context)
 
 

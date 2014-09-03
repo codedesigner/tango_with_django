@@ -55,7 +55,14 @@
         <div class="row-fluid">
           <div class="span3">
             <div class="well sidebar-nav">
-              {% include 'rango/category_list.html' %}
+              {% block sidebar %}
+              {% endblock %}
+              <div id="category_list">
+                {% if category_list %}
+                  <ul class="nav nav-list"><li><h4>Category List</h4></li>
+                  {% include 'rango/category_list.html' %}
+                {% endif %}
+              </div>
             </div>
             <!--/.well -->
           </div>
