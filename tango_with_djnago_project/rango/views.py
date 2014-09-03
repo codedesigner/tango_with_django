@@ -1,12 +1,13 @@
 from datetime import datetime
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
-from django.shortcuts import render_to_response, render
+from django.shortcuts import render_to_response, render, redirect
 from django.contrib.auth import authenticate, login, logout
 from rango.models import Category, Page
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 from django.contrib.auth.decorators import login_required
 from rango.bing_search import run_query
+from django.contrib.auth.models import User
 
 @login_required
 def add_category(request):
@@ -326,5 +327,34 @@ def search(request):
 
     return render_to_response('rango/search.html', {'result_list': result_list,
                                                     'category_list':category_list}, context)
+@login_required
+def profile(request):
+    context = RequestContext(request)
+    category_list = get_category_list()
+    context_dict = {'category_list':category_list}
+    u = User.objects.get(username=request.user)
 
+    try:
+        up = UserProfile.objects.get(user=u)
+    except:
+        up= None
 
+    context_dict['user'] = u
+    context_dict['userprofile'] = up
+    return render_to_response('rango/profile.html', context_dict, context)
+
+def track_url(request):
+    context = RequestContext(request)
+    page_id = None
+    url = '/rango/'
+    if request.method == 'GET':
+        if 'page_id' in request.GET:
+            page_id = request.GET['page_id']
+            try:
+                page = Page.objects.get(id=page_id)
+                page.views = page.views + 1
+                page.save()
+                url = page.url
+            except:
+                pass
+    return redirect(url)
