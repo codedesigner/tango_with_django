@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from rango.models import Category, Page
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 from django.contrib.auth.decorators import login_required
+from rango.bing_search import run_query
 
 @login_required
 def add_category(request):
@@ -79,6 +80,9 @@ def index(request):
     page_list = Page.objects.order_by('-views')[:5]
     context_dict['pages'] = page_list
 
+    category_list = get_category_list()    
+    context_dict['category_list'] = category_list
+
     # ### NEW CODE ###
     # Obtaine our Response object early so we can add cookie information.
     response = render_to_response('rango/index.html', context_dict, context)
@@ -120,6 +124,13 @@ def category_list(request):
         category.url = encode_url(category.name)
     return render_to_response('rango/category_list.html', context_dict, context)
 
+
+def get_category_list():
+    category_list = Category.objects.all()
+    for category in category_list:
+        category.url = encode_url(category.name)
+    return category_list
+
 def page_list(request):
     context = RequestContext(request)
     page_list = Page.objects.all()
@@ -135,6 +146,8 @@ def category(request, category_name_url):
         pages = Page.objects.filter(category=category)
         context_dict['pages'] = pages
         context_dict['category'] = category
+        category_list = get_category_list()
+        context_dict['category_list'] = category_list
     except Category.DoesNotExist:
         pass
 
@@ -266,3 +279,19 @@ def user_logout(request):
 
     # Take back the user to the homepage.
     return HttpResponseRedirect('/rango/')
+
+
+def search(request):
+    context = RequestContext(request)
+    result_list = []
+
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+
+        if query:
+            # Run our Bing function to get the results list!
+            result_list = run_query(query)
+
+    return render_to_response('rango/search.html', {'result_list': result_list}, context)
+
+
