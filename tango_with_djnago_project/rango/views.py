@@ -160,7 +160,7 @@ def category(request, category_name_url):
         # Find the category with the given name.
         # Raises an exception if the category doesn't exist.
         # We also do a case insensitive match.
-        category = Category.objects.get(name__iexact=category_name)
+        category = Category.objects.get(name=category_name)
         context_dict['category'] = category
         # Retrieve all the associated pages.
         # Note that filter returns >= 1 model instance.
@@ -358,3 +358,19 @@ def track_url(request):
             except:
                 pass
     return redirect(url)
+
+@login_required
+def like_category(request):
+    context = RequestContext(request)
+    cat_id = None
+    if request.method == 'GET':
+        cat_id = request.GET['category_id']
+
+    likes = 0
+    if cat_id:
+        category = Category.objects.get(id=int(cat_id))
+        if category:
+            likes = category.likes + 1
+            category.likes = likes
+            category.save()
+        return HttpResponse(likes)
