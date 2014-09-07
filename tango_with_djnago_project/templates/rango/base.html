@@ -64,6 +64,18 @@
                   {% include 'rango/category_list.html' %}
                 {% endif %}
               </div>
+              <ul class="nav nav-list">
+                <li class="nav-header">Find a Category</li>
+                <form>
+                  <label></label>
+                  <li><input class="serach-query span10" type="text" name="suggestion" value="" id="suggestion"></li>
+                </form>
+              </ul>
+              {% if category_list %}
+                <div id="categories">
+                  {% include 'rango/category_list.html' with category_list=category_list %}
+                </div>
+              {% endif %}
             </div>
             <!--/.well -->
           </div>

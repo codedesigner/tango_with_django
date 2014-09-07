@@ -4,9 +4,20 @@
 
 {% block title %} {{ category_name }} {% endblock %}
 
+
 {% block body_block %} 
   <div class="hero-unit" >
   <h3>{{ category_name }}</h3>
+
+  <div id="like">
+    <p>    
+      <b id="like_count">{{ category.likes }}</b> people like this category
+      {% if user.is_authenticated %}
+        <button id="likes" data-catid="{{category.id}}" class="btn btn-mini btn-primary" type="button">Like</button>
+      {% endif %}
+    </p>
+  </div>
+
     {% if pages %}
       <ul>
         {% for page in pages %}
@@ -19,9 +30,9 @@
           </li>      
         {% endfor %}
       </ul>
-      {% if user.is_authenticated %}
+      <!-- {% if user.is_authenticated %}
         <a href="add_page/" class="btn btn-info btn-xs">Add Page</a>
-      {% endif %}
+      {% endif %} -->
     {% else %}
       <h3>No pages currently in category.</h3>
       {% if user.is_authenticated %}
@@ -33,23 +44,15 @@
       {% endif %}
     {% endif %}
 
-  <p>
-    
-    <b id="like_count">{{ category.likes }}</b> people like this category
-    {% if user.is_authenticated %}
-      <button id="likes" data-catid="{{category.id}}" class="btn btn-mini btn-primary" type="button">Like</button>
-    {% endif %}
-
-  </p>
-
+  
     
       <h3>Search for  Page.</h3>
         <br>
         <div class="container-fluid">
             <p>Search for a page.</p>
-            <form class="span8 form-search" id="search_form" method="post" action="/rango/category/{{ category_name_url }}/">
+            <form class="span8 form-search" id="search_form" method="post" action="/rango/category/{{ category_name }}/">
                 {% csrf_token %}
-                <input type="text" class="input-long search-query"  name="query" value="{{ category_name }}" id="query" />
+                <input type="text" class="input-long search-query"  name="query" value="{{ category_name }}" id="query" >
                 <button type="submit" class="btn btn-success" name="submit" value="Search">Search</button>
             </form>
         </div>
@@ -62,6 +65,9 @@
                   <li>
                       <strong><a href="{{ result.link }}">{{ result.title }}</a></strong><br />
                       <p>{{ result.summary }}</p>
+                      {% if user.is_authenticated %}
+                              <button data-catid="{{category.id}}" data-title="{{ result.title }}" data-url="{{ result.link }}" class="rango-add btn btn-info" type="button">Add</button>
+                      {% endif %}
                   </li>
                   {% endfor %}
               </ol>

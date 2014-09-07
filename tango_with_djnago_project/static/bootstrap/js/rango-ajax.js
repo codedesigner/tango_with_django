@@ -1,6 +1,5 @@
 $(document).ready(function) {
 
-});
 
 $('#likes').click(function(){
   var catid;
@@ -9,4 +8,18 @@ $('#likes').click(function(){
         $('#like_count').html(data)
         $('#likes').hide();
   });
+});
+
+$('#suggestion').keyup(function(){
+  var query;
+  query = $(this).val();
+  $.get('/rango/suggest_category/', {suggestion: query}, function(data){
+    $('#categories').html(data);
+  });
+});
+
+$(".rango-add").click(function(){
+
+});
+
 });
